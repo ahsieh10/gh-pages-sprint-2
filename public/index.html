@@ -59,11 +59,13 @@
         <hr>
         <!-- Prepare a region of the page to hold the command input box -->
         <div class="repl-input">
-            <input type="text" class="repl-command-box" placeholder="Enter command here">
+            <form id = "commands">
+                <input type="text" class="repl-command-box" placeholder="Enter command here">
+                <div class="button">
+                    <button> Submit command</button>
+                </div>
+            </form>
         </div>
-    </div>
-    <div class="button">
-        <button> Submit command</button>
     </div>
     <!-- Load the script! Note: the .js extension is because browsers don't use TypeScript
     directly. Instead, the author of the site needs to compile the TypeScript to JavaScript. -->
