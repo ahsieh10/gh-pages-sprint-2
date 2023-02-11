@@ -5,57 +5,10 @@
     Feel free to modify this as you wish.
 -->
 
-<!--
-    Command entry box code
--->
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="../styles/main.css" type="text/css">
-</head>
-<body>
-    <!-- Tell the browser what to show if JavaScript/TypeScript is disabled. -->
-    <noscript>This example requires JavaScript to run.</noscript>
-    <!-- Prepare a region of the page to hold the entire REPL interface -->
-    <div class="repl">
-        <!-- Prepare a region of the page to hold the command history -->
-        <div class="repl-history">            
-        </div>
-        <hr>
-        <!-- Prepare a region of the page to hold the command input box -->
-        <div class="repl-input">
-            <input type="text" class="repl-command-box" placeholder="Enter command here">
-        </div>
-    <button> Submit command</button>
-    </div>
-    <!-- Load the script! Note: the .js extension is because browsers don't use TypeScript
-    directly. Instead, the author of the site needs to compile the TypeScript to JavaScript. -->
-    <script type=module src="../src/main.js"></script>
-</body>
-</html>
-
 <html>
     <head>
-        <style>
-            h1 {
-                color:Black;
-            }
-            div.scroll {
-                margin:4px, 4px;
-                padding:4px;
-                background-color: White;
-                border: 2px solid Black;
-                width: 600px;
-                height: 150px;
-                overflow-x: hidden;
-                overflow-y: auto;
-                text-align:justify;
-            }
-        </style>
     </head>
     <body>
-        <center>
         <h1>Command History</h1>
         <div class="scroll">Placeholder (should return each command after user
             inputs them)
@@ -83,6 +36,37 @@
             inputs them)
 
         </div>
-    </center>
     </body>
+</html>
+
+<!--
+    Command entry box code
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../styles/main.css" type="text/css">
+</head>
+<body>
+    <!-- Tell the browser what to show if JavaScript/TypeScript is disabled. -->
+    <noscript>This example requires JavaScript to run.</noscript>
+    <!-- Prepare a region of the page to hold the entire REPL interface -->
+    <div class="repl">
+        <!-- Prepare a region of the page to hold the command history -->
+        <div class="repl-history">            
+        </div>
+        <hr>
+        <!-- Prepare a region of the page to hold the command input box -->
+        <div class="repl-input">
+            <input type="text" class="repl-command-box" placeholder="Enter command here">
+        </div>
+    </div>
+    <div class="button">
+        <button> Submit command</button>
+    </div>
+    <!-- Load the script! Note: the .js extension is because browsers don't use TypeScript
+    directly. Instead, the author of the site needs to compile the TypeScript to JavaScript. -->
+    <script type=module src="../src/main.js"></script>
+</body>
 </html>

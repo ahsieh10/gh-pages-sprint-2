@@ -1,0 +1,36 @@
+h1 {
+    color:#000000;
+    margin: 2px;
+}
+div.scroll {
+    margin: 5px;
+    padding:4px;
+    background-color: rgb(238, 238, 238);
+    border: 1.5px solid Black;
+    width: 600px;
+    height: 150px;
+    overflow-x: auto;
+    overflow-y: auto;
+    text-align:left;
+    }
+
+
+.repl-input {        
+    margin: 5px;    
+    height:2vh;
+}
+.repl-command-box {
+    width: 20%;            
+    margin: 2px, 4px;
+    padding: 1.5px;
+    display: block;
+    background-color: black;
+}
+
+button{
+    margin: 7px;
+    padding: 5px;
+    display: block;
+    background-color: black;
+    color: white;
+}
