@@ -6,7 +6,6 @@ window.onload = () => {
     // should be HTMLButtonElement. The handler function for a "click" takes no arguments.
 };
 function prepareSubmit() {
-    console.log('i am here');
     // Assumption: there's only one thing
     const maybeForm = document.getElementById('commands');
     if (maybeForm == null) {
@@ -22,19 +21,37 @@ function prepareSubmit() {
         maybeForm.addEventListener("submit", handleSubmit);
     }
 }
-function handleSubmit() {
-    const maybeDisplay = document.getElementsByClassName('scroll');
+function handleSubmit(event) {
+    event.preventDefault();
+    const maybeDisplays = document.getElementsByClassName('scroll');
+    const maybeDisplay = maybeDisplays.item(0);
     if (maybeDisplay == null) {
         console.log("Couldn't find input element");
     }
-    else if (!(maybeDisplay instanceof HTMLInputElement)) {
-        console.log(`Found element ${maybeDisplay}, but it wasn't an input`);
+    else if (!(maybeDisplay instanceof HTMLDivElement)) {
+        console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
     }
     else {
         // Notice that we're passing *THE FUNCTION* as a value, not calling it.
         // The browser will invoke the function when a key is pressed with the input in focus.
         //  (This should remind you of the strategy pattern things we've done in Java.)
-        maybeDisplay.value = `hi`;
+        const maybeInputs = document.getElementsByClassName('repl-command-box');
+        // Assumption: there's only one thing
+        const maybeInput = maybeInputs.item(0);
+        // Is the thing there? Is it of the expected type? 
+        //  (Remember that the HTML author is free to assign the repl-input class to anything :-) )
+        if (maybeInput == null) {
+            console.log("Couldn't find input element");
+        }
+        else if (!(maybeInput instanceof HTMLInputElement)) {
+            console.log(`Found element ${maybeInput}, but it wasn't an input`);
+        }
+        else {
+            // Notice that we're passing *THE FUNCTION* as a value, not calling it.
+            // The browser will invoke the function when a key is pressed with the input in focus.
+            //  (This should remind you of the strategy pattern things we've done in Java.)
+            maybeDisplay.innerText = maybeInput.innerText;
+        }
     }
 }
 // Provide this to other modules (e.g., for testing!)
