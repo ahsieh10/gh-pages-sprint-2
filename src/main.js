@@ -1,65 +1,42 @@
 // The window.onload callback is invoked when the window is first loaded by the browser
-window.onload = function () {
-    prepareKeypress();
-    prepareButtonclick();
+window.onload = () => {
+    prepareSubmit();
     // If you're adding an event for a button click, do something similar.
     // The event name in that case is "click", not "keypress", and the type of the element 
     // should be HTMLButtonElement. The handler function for a "click" takes no arguments.
 };
-function prepareKeypress() {
-    // As far as TypeScript knows, there may be *many* elements with this class.
-    var maybeInputs = document.getElementsByClassName('repl-command-box');
+function prepareSubmit() {
+    console.log('i am here');
     // Assumption: there's only one thing
-    var maybeInput = maybeInputs.item(0);
-    // Is the thing there? Is it of the expected type? 
-    //  (Remember that the HTML author is free to assign the repl-input class to anything :-) )
-    if (maybeInput == null) {
+    const maybeForm = document.getElementById('commands');
+    if (maybeForm == null) {
         console.log("Couldn't find input element");
     }
-    else if (!(maybeInput instanceof HTMLInputElement)) {
-        console.log("Found element ".concat(maybeInput, ", but it wasn't an input"));
+    else if (!(maybeForm instanceof HTMLFormElement)) {
+        console.log(`Found element ${maybeForm}, but it wasn't an input`);
     }
     else {
         // Notice that we're passing *THE FUNCTION* as a value, not calling it.
         // The browser will invoke the function when a key is pressed with the input in focus.
         //  (This should remind you of the strategy pattern things we've done in Java.)
-        maybeInput.addEventListener("keypress", handleKeypress);
+        maybeForm.addEventListener("submit", handleSubmit);
     }
 }
-function prepareButtonclick() {
-    // As far as TypeScript knows, there may be *many* elements with this class.
-    var maybeButtons = document.getElementsByTagName("button");
-    // Assumption: there's only one thing
-    var maybeButton = maybeButtons.item(0);
-    // Is the thing there? Is it of the expected type?
-    //  (Remember that the HTML author is free to assign the repl-Button class to anything :-) )
-    if (maybeButton == null) {
-        console.log("Couldn't find Button element");
+function handleSubmit() {
+    const maybeDisplay = document.getElementsByClassName('scroll');
+    if (maybeDisplay == null) {
+        console.log("Couldn't find input element");
     }
-    else if (!(maybeButton instanceof HTMLButtonElement)) {
-        console.log("Found element ".concat(maybeButton, ", but it wasn't an Button"));
+    else if (!(maybeDisplay instanceof HTMLInputElement)) {
+        console.log(`Found element ${maybeDisplay}, but it wasn't an input`);
     }
     else {
         // Notice that we're passing *THE FUNCTION* as a value, not calling it.
-        // The browser will invoke the function when a key is pressed with the Button in focus.
+        // The browser will invoke the function when a key is pressed with the input in focus.
         //  (This should remind you of the strategy pattern things we've done in Java.)
-        maybeButton.addEventListener("click", handleButtonclick);
+        maybeDisplay.value = `hi`;
     }
-}
-// We'll use a global state reference for now
-var pressCount = 0;
-function getPressCount() {
-    return pressCount;
-}
-function handleKeypress(event) {
-    // The event has more fields than just the key pressed (e.g., Alt, Ctrl, etc.)
-    pressCount = pressCount + 1;
-    console.log("key pressed: ".concat(event.key, ". ").concat(getPressCount(), " presses seen so far."));
-}
-function handleButtonclick() {
-    // The event has more fields than just the key pressed (e.g., Alt, Ctrl, etc.)
-    console.log("pressed a button.");
 }
 // Provide this to other modules (e.g., for testing!)
 // The configuration in this project will require /something/ to be exported.
-export { handleKeypress, prepareKeypress, getPressCount, prepareButtonclick, handleButtonclick };
+export { prepareSubmit, handleSubmit };

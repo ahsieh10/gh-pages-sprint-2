@@ -9,18 +9,18 @@ window.onload = () => {
 }
 
 function prepareSubmit(){
-    const maybeInputs: HTMLCollectionOf<Element> = document.getElementsByClassName('commands')
+    console.log('i am here')
     // Assumption: there's only one thing
-    const maybeInput: Element | null = maybeInputs.item(0)
-    if(maybeInput == null) {
+    const maybeForm: Element | null = document.getElementById('commands')
+    if(maybeForm == null) {
         console.log("Couldn't find input element")
-    } else if(!(maybeInput instanceof HTMLInputElement)) {
-        console.log(`Found element ${maybeInput}, but it wasn't an input`)
+    } else if(!(maybeForm instanceof HTMLFormElement)) {
+        console.log(`Found element ${maybeForm}, but it wasn't an input`)
     } else {
         // Notice that we're passing *THE FUNCTION* as a value, not calling it.
         // The browser will invoke the function when a key is pressed with the input in focus.
         //  (This should remind you of the strategy pattern things we've done in Java.)
-        maybeInput.addEventListener("submit", handleSubmit);
+        maybeForm.addEventListener("submit", handleSubmit);
     }
 }
 
@@ -34,7 +34,7 @@ function handleSubmit(){
         // Notice that we're passing *THE FUNCTION* as a value, not calling it.
         // The browser will invoke the function when a key is pressed with the input in focus.
         //  (This should remind you of the strategy pattern things we've done in Java.)
-        maybeDisplay.textContent = `hi`
+        maybeDisplay.value = `hi`
     }
 }
 
