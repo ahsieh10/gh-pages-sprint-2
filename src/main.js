@@ -1,3 +1,4 @@
+"use strict";
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
     prepareSubmit();
@@ -21,10 +22,11 @@ function prepareSubmit() {
         maybeForm.addEventListener("submit", handleSubmit);
     }
 }
+let history = '';
 function handleSubmit(event) {
-    event.preventDefault();
-    const maybeDisplays = document.getElementsByClassName('scroll');
+    const maybeDisplays = document.getElementsByClassName("scroll");
     const maybeDisplay = maybeDisplays.item(0);
+    event.preventDefault();
     if (maybeDisplay == null) {
         console.log("Couldn't find input element");
     }
@@ -50,10 +52,29 @@ function handleSubmit(event) {
             // Notice that we're passing *THE FUNCTION* as a value, not calling it.
             // The browser will invoke the function when a key is pressed with the input in focus.
             //  (This should remind you of the strategy pattern things we've done in Java.)
-            maybeDisplay.innerText = maybeInput.innerText;
+            history += processCommand(maybeInput.value) + '\n';
+            maybeDisplay.innerText = history;
+            maybeInput.value = '';
         }
     }
 }
-// Provide this to other modules (e.g., for testing!)
-// The configuration in this project will require /something/ to be exported.
-export { prepareSubmit, handleSubmit };
+let current_mode = "brief";
+function processCommand(command) {
+    if (command == "mode") { // if user switches the mode by command
+        if (current_mode == "brief") {
+            // if current mode is brief
+            current_mode = "verbose"; // change mode into verbose
+            return "Command: " + command + "\nOutput: Changed to verbose mode" + "\n";
+        }
+        else { // if current mode is verbose
+            current_mode = "brief"; // change mode into brief
+            return "Changed to brief mode" + '\n';
+        }
+    }
+    else if (current_mode == "brief") {
+        return "<insert valid command result here> " + "\n";
+    }
+    else if (current_mode == "verbose") {
+        return "Command: " + command + "\nOutput: " + '\n';
+    }
+}
