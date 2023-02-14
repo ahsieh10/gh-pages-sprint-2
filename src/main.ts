@@ -26,7 +26,7 @@ function prepareSubmit(){
 
 let history = '';
 let contents = new Array<Array<string>>;
-contents = [["hi", "hey", "hello"], ["bye", "see ya", "later"]]
+//contents = [["hi", "hey", "hello"], ["bye", "see ya", "later"]]
 function handleSubmit(event: SubmitEvent) {
     const maybeDisplays: HTMLCollectionOf<Element> =
     document.getElementsByClassName("scroll");
@@ -53,9 +53,12 @@ function handleSubmit(event: SubmitEvent) {
             // Notice that we're passing *THE FUNCTION* as a value, not calling it.
             // The browser will invoke the function when a key is pressed with the input in focus.
             //  (This should remind you of the strategy pattern things we've done in Java.)
-            history += processCommand(maybeInput.value) + '\n';
-            console.log("hey!");
-            maybeDisplay.innerText = history;
+            // history += processCommand(maybeInput.value) + '\n';
+            // console.log("hey!");
+            // maybeDisplay.innerText = history;
+            // maybeInput.value = '';
+            const output: Element = processCommand(maybeInput.value)
+            maybeDisplay.appendChild(output)
             maybeInput.value = '';
         }
     }
@@ -63,67 +66,105 @@ function handleSubmit(event: SubmitEvent) {
 
 let current_mode = "brief";
 function processCommand(command: string) {
+    let output = document.createElement("div")
 
   if (command == "mode") { // if user switches the mode by command
     if (current_mode == "brief") {
       // if current mode is brief
-      current_mode = "verbose"; // change mode into verbose
-      return "Command: " + command + "\nOutput: Changed to verbose mode" + "\n";
+      current_mode = "verbose" // change mode into verbose
+      output.innerText = "Command: " + command + "\nOutput: Changed to verbose mode" + "\n"
+      //return "Command: " + command + "\nOutput: Changed to verbose mode" + "\n";
     }
     else { // if current mode is verbose
         current_mode = "brief"; // change mode into brief
-        return "Changed to brief mode" + '\n';
+        output.innerText = "Changed to brief mode" + '\n';
     }
+    return output
   }
-  else if (command == "view") {
-    if (current_mode == "brief") {
-      // if current mode is brief
-      viewCSVData(contents);
-      return "Showing data contents from loaded CSV" + "\n";
-    } else {
-      // if current mode is verbose
-      viewCSVData(contents);
-      return (
-        "Command: " + command + "\nShowing data contents from loaded CSV" + "\n"
-      );
+  if(current_mode == "verbose"){
+    let inputCommand = document.createElement("div")
+    inputCommand.innerText = "Command: " + command
+    output.appendChild(inputCommand)
+  }
+  if (command == "view") {
+    if(contents.length == 0){
+        let errorMessage = document.createElement("div")
+        if(current_mode == "verbose"){
+            errorMessage.innerText += "Output: "
+        }
+        errorMessage.innerText += "Invalid command"
+        output.appendChild(errorMessage)
+        return output
     }
+    let viewTable = viewCSVData(contents);
+    if (current_mode == "verbose") {
+      // if current mode is brief
+      //return "Showing data contents from loaded CSV" + "\n";
+      // if current mode is verbose
+      let tag = document.createElement("div");
+      tag.innerText = "Output:"
+      output.appendChild(tag)
+      //viewCSVData(contents);
+      //return (
+      //  "Command: " + command + "\nShowing data contents from loaded CSV" + "\n"
+      //);
+    }
+    output.appendChild(viewTable)
+    return output
   }
   else{
     const cArguments: Array<string> = command.split(" ", 3)
-    let results = '';
-    if((cArguments.length == 0 || cArguments.length == 1) || cArguments.length > 3){
-        results = "Invalid command"
-    }
-    else if(cArguments[0] == "load_file"){
-        if(cArguments.length == 1){
-            results = "Invalid command"
+    //let results = '';
+    let results = document.createElement("div");
+    if(cArguments.length != 3){
+        if(current_mode == "verbose"){
+            results.innerText += "Output: "
+        }
+        if(cArguments.length == 2 && cArguments[0] == "load_file"){
+            let parsed = processLoadData(cArguments[1])
+            if(parsed == null){
+                results.innerText += "File does not exist"
+            }
+            else{
+                results.innerText += parsed
+            }
         }
         else{
-            results = processLoadData(cArguments[1])
-            if(results == null){
-                results = "Invalid command"
+            results.innerText += "Invalid command"
+        }
+    }
+    else{
+        if(cArguments[0] == "search"){
+            let query = processSearch(cArguments[1], cArguments[2])
+            if(query == null){
+                if(current_mode == "verbose"){
+                    results.innerText += "Output: Invalid query"
+                }
+                else{
+                    results.innerText += "Invalid query"
+                }
+            }
+            else{
+                if(current_mode == "verbose"){
+                    let tag = document.createElement("div");
+                    tag.innerText = "Output:"
+                    output.appendChild(tag)
+                }
+                results.append(query)
+            }
+        }
+        else{
+            if(current_mode == "verbose"){
+                results.innerText += "Output: Invalid command"
+            }
+            else{
+                results.innerText += "Invalid command"
             }
         }
     }
-    else if(cArguments[0] == "search" && cArguments.length == 3){
-        let query = processSearch(cArguments[1], cArguments[2])
-        if(query == null){
-            results = "Invalid command"
-        }
-        else{
-            results = ""
-        }
-    }
-    else{
-        results = "Invalid command"
-    }
-    if (current_mode == "brief") {
-        return results + "\n";
-    }
-    else{
-        return "Command: " + command + "\nOutput: " + results + '\n';
-    }
-  }
+    output.appendChild(results)
+    return output
+   }
 }
 
 function processLoadData(filepath: string){
@@ -169,7 +210,9 @@ function viewCSVData(contents: Array<Array<string>>) {
   // put the <tbody> in the <table>
   tbl.appendChild(tblBody);
   // appends <table> into <body>
-  finished_table = document.body.appendChild(tbl);
+  //document.getElementsByClassName("scroll")[0].appendChild(tbl);
+  //finished_table = document.body.appendChild(tbl);
+  return tbl
 }
 
 
@@ -180,8 +223,9 @@ function processSearch(column: string, value: string){
     }
     else{
         console.log(data)
-        viewCSVData(data)
-        return true
+        //viewCSVData(data)
+        //return true
+        return viewCSVData(data)
     }
 }
 
