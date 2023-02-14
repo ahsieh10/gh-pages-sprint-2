@@ -1,38 +1,105 @@
-let mockedParseData = new Map<string, Array<Array<string>>>()
-let mockedQueryData = new Map<string, Array<Array<string>>>()
-
+let mockedParseData = new Map<string, Array<Array<string>>>();
+let mockedQueryData = new Map<string, Array<Array<string>>>();
 
 const file1 = [
-    ["Header"],
-    ["1", "2", "3", "4", "5"],
-    ["The", "song", "remains", "the", "same."]
-]
+  ["1", "2", "3", "4", "5"],
+  ["The", "song", "remains", "the", "same."],
+];
 
-const oneColumnFile = [
-    ["1"],
-    ["2"],
-    ["3"],
-    ["4"],
-]
+const oneColumnFile = [["1"], ["2"], ["3"], ["4"]];
 
+const oneRowFile = [
+  [
+    "this",
+    "is",
+    "a",
+    "one",
+    "row",
+    "file",
+    "ok?",
+    "got it?",
+    "and",
+    "it",
+    "is",
+    "very",
+    "long",
+  ],
+];
 
-mockedParseData.set("file1", file1)
-mockedParseData.set("oneColumnFile", oneColumnFile)
+const equalColumnRowFile = [
+  ["a", "b", "c", "d"],
+  ["e", "f", "g", "h"],
+  ["i", "j", "k", "l"],
+  ["m", "n", "o", "p"],
+];
 
-export function getData(filepath:string){
-    if(mockedParseData.has(filepath)){
-        return mockedParseData.get(filepath)!
-    }
-    else{
-        return null
-    }
+const manyColumnsLowRowsFile = [
+  [
+    "this",
+    "is",
+    "a",
+    "high",
+    "column",
+    "file",
+    "ok?",
+    "got it?",
+    "and",
+    "it",
+    "is",
+    "very",
+    "long",
+  ],
+  [
+    "but",
+    "there",
+    "aren't",
+    "many",
+    "rows",
+    "so",
+    "we",
+    "can",
+    "test",
+    "it",
+    "better",
+    "for",
+    "functionality",
+  ],
+];
+
+const manyRowsLowColumnsFile = [
+  ["a", "b"],
+  ["e", "f"],
+  ["i", "j"],
+  ["i", "j"],
+  ["c", "d"],
+  ["o", "p"],
+  ["q", "r"],
+  ["s", "c"],
+  ["w", "t"],
+  ["n", "p"],
+  ["z", "z"],
+  ["m", "n"],
+];
+
+mockedParseData.set("file1", file1);
+mockedParseData.set("oneColumnFile", oneColumnFile);
+mockedParseData.set("oneRowFile", oneRowFile);
+mockedParseData.set("equalColumnRowFile", equalColumnRowFile);
+mockedParseData.set("manyColumnsLowRowsFile", manyColumnsLowRowsFile);
+mockedParseData.set("manyRowsLowColumnsFile", manyRowsLowColumnsFile);
+
+export function getData(filepath: string) {
+  if (mockedParseData.has(filepath)) {
+    return mockedParseData.get(filepath)!;
+  } else {
+    return null;
+  }
 }
 
-export function getSearch(column: string, value: string){
-    if(mockedQueryData.has(column + value)){
-        return mockedQueryData.get(column + value)!
-    }
-    else{
-        return null
-    }
+export function getSearch(column: string, value: string) {
+      if (mockedQueryData.has(column + value)) {
+    return mockedQueryData.get(column + value)!;
+  } else {
+    return null;
+  }
 }

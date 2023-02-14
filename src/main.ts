@@ -141,6 +141,7 @@ function processLoadData(filepath: string){
 
 
 let finished_table = null;
+
 function viewCSVData(contents: Array<Array<string>>) {
   const tbl = document.createElement("table");
   const tblBody = document.createElement("tbody");
