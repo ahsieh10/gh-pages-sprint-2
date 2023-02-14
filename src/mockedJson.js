@@ -1,4 +1,5 @@
-let mockedData = new Map();
+let mockedParseData = new Map();
+let mockedQueryData = new Map();
 const file1 = [
     ["1", "2", "3", "4", "5"],
     ["The", "song", "remains", "the", "same."]
@@ -9,13 +10,15 @@ const oneColumnFile = [
     ["3"],
     ["4"],
 ];
-mockedData.set("file1", file1);
-mockedData.set("oneColumnFile", oneColumnFile);
+mockedParseData.set("file1", file1);
+mockedParseData.set("oneColumnFile", oneColumnFile);
 export function getData(filepath) {
-    if (mockedData.has(filepath)) {
-        return mockedData.get(filepath);
+    if (mockedParseData.has(filepath)) {
+        return mockedParseData.get(filepath);
     }
     else {
         return null;
     }
+}
+export function getSearch(column, value) {
 }

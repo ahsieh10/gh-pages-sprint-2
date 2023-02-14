@@ -1,6 +1,7 @@
 let mockedParseData = new Map<string, Array<Array<string>>>()
 let mockedQueryData = new Map<string, Array<Array<string>>>()
 
+
 const file1 = [
     ["1", "2", "3", "4", "5"],
     ["The", "song", "remains", "the", "same."]

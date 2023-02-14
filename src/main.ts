@@ -1,4 +1,5 @@
 import {getData, getSearch} from './mockedJson.js'
+
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {    
     prepareSubmit()
@@ -24,7 +25,8 @@ function prepareSubmit(){
 }
 
 let history = '';
-let contents = null;
+let contents = new Array<Array<string>>;
+contents = [["hi", "hey", "hello"], ["bye", "see ya", "later"]]
 function handleSubmit(event: SubmitEvent) {
     const maybeDisplays: HTMLCollectionOf<Element> =
     document.getElementsByClassName("scroll");
@@ -52,6 +54,7 @@ function handleSubmit(event: SubmitEvent) {
             // The browser will invoke the function when a key is pressed with the input in focus.
             //  (This should remind you of the strategy pattern things we've done in Java.)
             history += processCommand(maybeInput.value) + '\n';
+            console.log("hey!");
             maybeDisplay.innerText = history;
             maybeInput.value = '';
         }
@@ -72,8 +75,18 @@ function processCommand(command: string) {
         return "Changed to brief mode" + '\n';
     }
   }
-  else if(command == "view"){
-    //do view
+  else if (command == "view") {
+    if (current_mode == "brief") {
+      // if current mode is brief
+      viewCSVData(contents);
+      return "Showing data contents from loaded CSV" + "\n";
+    } else {
+      // if current mode is verbose
+      viewCSVData(contents);
+      return (
+        "Command: " + command + "\nShowing data contents from loaded CSV" + "\n"
+      );
+    }
   }
   else{
     const cArguments: Array<string> = command.split(" ", 3)
@@ -90,6 +103,7 @@ function processCommand(command: string) {
             if(results == null){
                 results = "Invalid command"
             }
+
         }
     }
     else{
@@ -105,6 +119,7 @@ function processCommand(command: string) {
 }
 
 function processLoadData(filepath: string){
+
     const data: Array<Array<string>> | null = getData(filepath)
     if(data == null){
         return `File ${filepath} does not exist`
@@ -115,6 +130,39 @@ function processLoadData(filepath: string){
         return `File ${filepath} loaded!`
     }
 }
+
+
+let finished_table = null;
+function viewCSVData(contents: Array<Array<string>>) {
+  const tbl = document.createElement("table");
+  const tblBody = document.createElement("tbody");
+
+  // creating all cells
+  for (let i = 0; i < contents.length; i++) {
+    // creates a table row
+    const row = document.createElement("tr");
+
+    for (let j = 0; j < contents[i].length; j++) { 
+        // go through each array element within the larger array
+      // Create a <td> element and a text node, make the text
+      // node the contents of the <td>, and put the <td> at
+      // the end of the table row
+      const cell = document.createElement("td");
+      const cellText = document.createTextNode(contents[i][j]);
+      cell.appendChild(cellText);
+      row.appendChild(cell);
+    }
+
+    // add the row to the end of the table body
+    tblBody.appendChild(row);
+  }
+
+  // put the <tbody> in the <table>
+  tbl.appendChild(tblBody);
+  // appends <table> into <body>
+  finished_table = document.body.appendChild(tbl);
+}
+
 
 function processSearch(column: string, value: string){
     
