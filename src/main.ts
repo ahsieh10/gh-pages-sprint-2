@@ -1,4 +1,4 @@
-
+import {getData} from './mockedJson'
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {    
     prepareSubmit()
@@ -24,6 +24,7 @@ function prepareSubmit(){
 }
 
 let history = '';
+let contents = null;
 function handleSubmit(event: SubmitEvent) {
     const maybeDisplays: HTMLCollectionOf<Element> =
     document.getElementsByClassName("scroll");
@@ -71,13 +72,41 @@ function processCommand(command: String) {
         return "Changed to brief mode" + '\n';
     }
   }
-  else if (current_mode == "brief") {
-    return "<insert valid command result here> " + "\n";
+  else if(command == "view"){
+    //do view
+  }
+  else{
+    const cArguments: Array<String> = command.split(" ", 3)
+    let results = '';
+    if(cArguments.length == 0){
+        results = "Invalid command"
+    }
+    else if(cArguments[0] == "load_file"){
+        if(cArguments.length == 1){
+            results = "Invalid command"
+        }
+        else{
+            results = processLoadData(cArguments[1])
+        }
+    }
+    if (current_mode == "brief") {
+        return "<insert valid command result here> " + "\n";
+    }
+    else{
+        return "Command: " + command + "\nOutput: " + '\n';
+    }
+  }
+}
 
-  }
-  else if (current_mode == "verbose") {
-    return "Command: " + command + "\nOutput: " + '\n';
-  }
+function processLoadData(filepath: String){
+    const data: Array<Array<String>> | null = getData(filepath)
+    if(data == null){
+        return `File ${filepath} does not exist`
+    }
+    else{
+        contents = data
+        return `File ${filepath} loaded!`
+    }
 }
 
 // Provide this to other modules (e.g., for testing!)

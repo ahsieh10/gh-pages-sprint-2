@@ -1,4 +1,4 @@
-"use strict";
+import { getData } from './mockedJson';
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
     prepareSubmit();
@@ -23,6 +23,7 @@ function prepareSubmit() {
     }
 }
 let history = '';
+let contents = null;
 function handleSubmit(event) {
     const maybeDisplays = document.getElementsByClassName("scroll");
     const maybeDisplay = maybeDisplays.item(0);
@@ -71,10 +72,41 @@ function processCommand(command) {
             return "Changed to brief mode" + '\n';
         }
     }
-    else if (current_mode == "brief") {
-        return "<insert valid command result here> " + "\n";
+    else if (command == "view") {
+        //do view
     }
-    else if (current_mode == "verbose") {
-        return "Command: " + command + "\nOutput: " + '\n';
+    else {
+        const cArguments = command.split(" ", 3);
+        let results = '';
+        if (cArguments.length == 0) {
+            results = "Invalid command";
+        }
+        else if (cArguments[0] == "load_file") {
+            if (cArguments.length == 1) {
+                results = "Invalid command";
+            }
+            else {
+                results = processLoadData(cArguments[1]);
+            }
+        }
+        if (current_mode == "brief") {
+            return "<insert valid command result here> " + "\n";
+        }
+        else {
+            return "Command: " + command + "\nOutput: " + '\n';
+        }
     }
 }
+function processLoadData(filepath) {
+    const data = getData(filepath);
+    if (data == null) {
+        return `File ${filepath} does not exist`;
+    }
+    else {
+        contents = data;
+        return `File ${filepath} loaded!`;
+    }
+}
+// Provide this to other modules (e.g., for testing!)
+// The configuration in this project will require /something/ to be exported.
+export { prepareSubmit, handleSubmit };
