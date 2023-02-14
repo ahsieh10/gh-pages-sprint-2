@@ -205,7 +205,7 @@ function viewCSVData(contents) {
     return tbl;
 }
 function processSearch(column, value) {
-    const data = getSearch(column, value);
+    const data = getSearch(contents, column, value);
     if (data == null) {
         return null;
     }

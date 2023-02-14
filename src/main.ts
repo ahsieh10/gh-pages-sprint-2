@@ -217,12 +217,12 @@ function viewCSVData(contents: Array<Array<string>>) {
 
 
 function processSearch(column: string, value: string){
-    const data: Array<Array<string>> | null = getSearch(column, value)
+    const data: Array<Array<string>> | null = getSearch(contents, column, value)
     if(data == null){
         return null
     }
     else{
-        console.log(data)
+        //console.log(data)
         //viewCSVData(data)
         //return true
         return viewCSVData(data)

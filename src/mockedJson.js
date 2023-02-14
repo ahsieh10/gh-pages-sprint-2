@@ -2,7 +2,7 @@ let mockedParseData = new Map();
 let mockedQueryData = new Map();
 const file1 = [
     ["1", "2", "3", "4", "5"],
-    ["The", "song", "remains", "the", "same."],
+    ["The", "song", "remains", "the", "same."]
 ];
 const oneColumnFile = [["1"], ["2"], ["3"], ["4"]];
 const oneRowFile = [
@@ -80,6 +80,7 @@ mockedParseData.set("oneRowFile", oneRowFile);
 mockedParseData.set("equalColumnRowFile", equalColumnRowFile);
 mockedParseData.set("manyColumnsLowRowsFile", manyColumnsLowRowsFile);
 mockedParseData.set("manyRowsLowColumnsFile", manyRowsLowColumnsFile);
+mockedQueryData.set("2remains", file1);
 export function getData(filepath) {
     if (mockedParseData.has(filepath)) {
         return mockedParseData.get(filepath);
@@ -88,7 +89,8 @@ export function getData(filepath) {
         return null;
     }
 }
-export function getSearch(column, value) {
+export function getSearch(contents, column, value) {
+    console.log(contents);
     if (mockedQueryData.has(column + value)) {
         return mockedQueryData.get(column + value);
     }
