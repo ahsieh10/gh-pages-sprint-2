@@ -103,7 +103,15 @@ function processCommand(command: string) {
             if(results == null){
                 results = "Invalid command"
             }
-
+        }
+    }
+    else if(cArguments[0] == "search" && cArguments.length == 3){
+        let query = processSearch(cArguments[1], cArguments[2])
+        if(query == null){
+            results = "Invalid command"
+        }
+        else{
+            results = ""
         }
     }
     else{
@@ -165,7 +173,15 @@ function viewCSVData(contents: Array<Array<string>>) {
 
 
 function processSearch(column: string, value: string){
-    
+    const data: Array<Array<string>> | null = getSearch(column, value)
+    if(data == null){
+        return null
+    }
+    else{
+        console.log(data)
+        viewCSVData(data)
+        return true
+    }
 }
 
 // Provide this to other modules (e.g., for testing!)

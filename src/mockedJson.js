@@ -1,7 +1,7 @@
 let mockedParseData = new Map();
 let mockedQueryData = new Map();
 const file1 = [
-    ["1", "2", "3", "4", "5"],
+    ["1", "2", "3", "4"],
     ["The", "song", "remains", "the", "same."]
 ];
 const oneColumnFile = [

@@ -3,6 +3,7 @@ let mockedQueryData = new Map<string, Array<Array<string>>>()
 
 
 const file1 = [
+    ["Header"],
     ["1", "2", "3", "4", "5"],
     ["The", "song", "remains", "the", "same."]
 ]
@@ -28,4 +29,10 @@ export function getData(filepath:string){
 }
 
 export function getSearch(column: string, value: string){
+    if(mockedQueryData.has(column + value)){
+        return mockedQueryData.get(column + value)!
+    }
+    else{
+        return null
+    }
 }
