@@ -1,4 +1,4 @@
-import { getData } from './mockedJson';
+import { getData } from './mockedJson.js';
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
     prepareSubmit();
@@ -78,7 +78,7 @@ function processCommand(command) {
     else {
         const cArguments = command.split(" ", 3);
         let results = '';
-        if (cArguments.length == 0) {
+        if (cArguments.length == 0 || cArguments.length == 1) {
             results = "Invalid command";
         }
         else if (cArguments[0] == "load_file") {
@@ -87,13 +87,19 @@ function processCommand(command) {
             }
             else {
                 results = processLoadData(cArguments[1]);
+                if (results == null) {
+                    results = "Invalid command";
+                }
             }
         }
+        else {
+            results = "Invalid command";
+        }
         if (current_mode == "brief") {
-            return "<insert valid command result here> " + "\n";
+            return results + "\n";
         }
         else {
-            return "Command: " + command + "\nOutput: " + '\n';
+            return "Command: " + command + "\nOutput: " + results + '\n';
         }
     }
 }
@@ -104,6 +110,7 @@ function processLoadData(filepath) {
     }
     else {
         contents = data;
+        console.log(data);
         return `File ${filepath} loaded!`;
     }
 }

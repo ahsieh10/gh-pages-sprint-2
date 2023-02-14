@@ -1,4 +1,4 @@
-import {getData} from './mockedJson'
+import {getData, getSearch} from './mockedJson.js'
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {    
     prepareSubmit()
@@ -59,7 +59,7 @@ function handleSubmit(event: SubmitEvent) {
 }
 
 let current_mode = "brief";
-function processCommand(command: String) {
+function processCommand(command: string) {
 
   if (command == "mode") { // if user switches the mode by command
     if (current_mode == "brief") {
@@ -76,9 +76,9 @@ function processCommand(command: String) {
     //do view
   }
   else{
-    const cArguments: Array<String> = command.split(" ", 3)
+    const cArguments: Array<string> = command.split(" ", 3)
     let results = '';
-    if(cArguments.length == 0){
+    if((cArguments.length == 0 || cArguments.length == 1) || cArguments.length > 3){
         results = "Invalid command"
     }
     else if(cArguments[0] == "load_file"){
@@ -87,26 +87,37 @@ function processCommand(command: String) {
         }
         else{
             results = processLoadData(cArguments[1])
+            if(results == null){
+                results = "Invalid command"
+            }
         }
     }
+    else{
+        results = "Invalid command"
+    }
     if (current_mode == "brief") {
-        return "<insert valid command result here> " + "\n";
+        return results + "\n";
     }
     else{
-        return "Command: " + command + "\nOutput: " + '\n';
+        return "Command: " + command + "\nOutput: " + results + '\n';
     }
   }
 }
 
-function processLoadData(filepath: String){
-    const data: Array<Array<String>> | null = getData(filepath)
+function processLoadData(filepath: string){
+    const data: Array<Array<string>> | null = getData(filepath)
     if(data == null){
         return `File ${filepath} does not exist`
     }
     else{
         contents = data
+        console.log(data)
         return `File ${filepath} loaded!`
     }
+}
+
+function processSearch(column: string, value: string){
+    
 }
 
 // Provide this to other modules (e.g., for testing!)
