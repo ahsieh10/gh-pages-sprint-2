@@ -1,4 +1,5 @@
-import { getData } from './mockedJson';
+"use strict";
+// import {getData} from './mockedJson'
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
     prepareSubmit();
@@ -23,7 +24,8 @@ function prepareSubmit() {
     }
 }
 let history = '';
-let contents = null;
+let contents = new Array;
+contents = [["hi", "hey", "hello"], ["bye", "see ya", "later"]];
 function handleSubmit(event) {
     const maybeDisplays = document.getElementsByClassName("scroll");
     const maybeDisplay = maybeDisplays.item(0);
@@ -73,7 +75,16 @@ function processCommand(command) {
         }
     }
     else if (command == "view") {
-        //do view
+        if (current_mode == "brief") {
+            // if current mode is brief
+            viewCSVData(contents);
+            return "Showing data contents from loaded CSV" + "\n";
+        }
+        else {
+            // if current mode is verbose
+            viewCSVData(contents);
+            return ("Command: " + command + "\nShowing data contents from loaded CSV" + "\n");
+        }
     }
     else {
         const cArguments = command.split(" ", 3);
@@ -86,7 +97,7 @@ function processCommand(command) {
                 results = "Invalid command";
             }
             else {
-                results = processLoadData(cArguments[1]);
+                // results = processLoadData(cArguments[1])
             }
         }
         if (current_mode == "brief") {
@@ -97,16 +108,41 @@ function processCommand(command) {
         }
     }
 }
-function processLoadData(filepath) {
-    const data = getData(filepath);
-    if (data == null) {
-        return `File ${filepath} does not exist`;
+/*
+function processLoadData(filepath: String){
+    const data: Array<Array<string>> | null = getData(filepath)
+    if(data == null){
+        return `File ${filepath} does not exist`
     }
-    else {
-        contents = data;
-        return `File ${filepath} loaded!`;
+    else{
+        contents = data
+        return `File ${filepath} loaded!`
     }
 }
-// Provide this to other modules (e.g., for testing!)
-// The configuration in this project will require /something/ to be exported.
-export { prepareSubmit, handleSubmit };
+*/
+let finished_table = null;
+function viewCSVData(contents) {
+    const tbl = document.createElement("table");
+    const tblBody = document.createElement("tbody");
+    // creating all cells
+    for (let i = 0; i < contents.length; i++) {
+        // creates a table row
+        const row = document.createElement("tr");
+        for (let j = 0; j < contents[i].length; j++) {
+            // go through each array element within the larger array
+            // Create a <td> element and a text node, make the text
+            // node the contents of the <td>, and put the <td> at
+            // the end of the table row
+            const cell = document.createElement("td");
+            const cellText = document.createTextNode(contents[i][j]);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+        // add the row to the end of the table body
+        tblBody.appendChild(row);
+    }
+    // put the <tbody> in the <table>
+    tbl.appendChild(tblBody);
+    // appends <table> into <body>
+    finished_table = document.body.appendChild(tbl);
+}

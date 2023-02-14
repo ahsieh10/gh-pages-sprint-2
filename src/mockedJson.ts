@@ -1,4 +1,4 @@
-let mockedData = new Map<String, Array<Array<String>>>()
+let mockedData = new Map<String, Array<Array<string>>>()
 
 export function getData(filepath:String){
     if(mockedData.has(filepath)){
