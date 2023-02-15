@@ -1,4 +1,4 @@
-import { getData, getSearch } from "./mockedJson.js";
+import { getData, getSearch } from "../mockedJson.js";
 
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
@@ -60,7 +60,6 @@ function handleSubmit(event: SubmitEvent) {
   }
 }
 
-
 /**
  * Takes in a command from the command text box and handles appropriate
  * messages or behaviors depending on the command's contents. If an invalid
@@ -72,8 +71,8 @@ export function processCommand(command: string) {
   let output = document.createElement("div");
 
   if (command == "mode") {
-    // handle mode cange
-    return processMode()
+    // handle mode change
+    return processMode();
   }
   if (current_mode == "verbose") {
     let inputCommand = document.createElement("div");
@@ -82,8 +81,7 @@ export function processCommand(command: string) {
   }
   if (command == "view") {
     return processView(output);
-  } 
-  else {
+  } else {
     const cArguments: Array<string> = command.split(" ", 3);
     let results = document.createElement("div");
     if (cArguments.length != 3) {
@@ -105,13 +103,11 @@ export function processCommand(command: string) {
         results.innerText += "Invalid command"; // if you had a command that
         // had 2 parameters and was not load_file
       }
-    } 
-    else {
+    } else {
       if (cArguments[0] == "search") {
         // if the command is search
-        return processSearch(output, cArguments)
-      } 
-      else {
+        return processSearch(output, cArguments);
+      } else {
         if (current_mode == "verbose") {
           results.innerText += "Output: Invalid command";
         } else {
@@ -128,14 +124,13 @@ export function processCommand(command: string) {
  * Changes mode to opposite of current setting (brief -> verbose, verbose -> brief)
  * @returns div element containing output message
  */
-function processMode(){
+function processMode() {
   let output = document.createElement("div");
   // if user switches the mode by command
   if (current_mode == "brief") {
     // if current mode is brief
     current_mode = "verbose"; // change mode into verbose
-    output.innerText =
-      "Command: mode\nOutput: Changed to verbose mode" + "\n";
+    output.innerText = "Command: mode\nOutput: Changed to verbose mode" + "\n";
   } else {
     // if current mode is verbose
     current_mode = "brief"; // change mode into brief
@@ -144,8 +139,7 @@ function processMode(){
   return output;
 }
 
-function processView(output: HTMLDivElement){
-
+function processView(output: HTMLDivElement) {
   if (contents.length == 0) {
     // if there is no CSV file (note that an
     // existing but empty CSV file would have a length of 1)
@@ -169,7 +163,7 @@ function processView(output: HTMLDivElement){
   return output;
 }
 
-function processSearch(output: HTMLElement, cArguments: Array<string>){
+function processSearch(output: HTMLElement, cArguments: Array<string>) {
   let results = document.createElement("div");
   if (contents.length == 0) {
     // if the csv file is empty
@@ -196,8 +190,8 @@ function processSearch(output: HTMLElement, cArguments: Array<string>){
     }
     results.append(query);
   }
-  output.appendChild(results)
-  return output
+  output.appendChild(results);
+  return output;
 }
 
 /**
@@ -224,7 +218,7 @@ function processLoadData(filepath: string) {
 /**
  * Processes the contents of a CSV file and turns the data from raw strings into
  * a structured HTML Table element
- * @param contents a 2D array of strings representing the contents/data of a 
+ * @param contents a 2D array of strings representing the contents/data of a
  * CSV file
  * @returns a table in HTML Element type that represents the CSV file contents
  */
@@ -286,7 +280,7 @@ export function clearHistory() {
   } else if (!(maybeDisplay instanceof HTMLDivElement)) {
     console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
   } else {
-    maybeDisplay.innerHTML = ''
+    maybeDisplay.innerHTML = "";
   }
 }
 

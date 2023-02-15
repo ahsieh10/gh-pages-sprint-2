@@ -1,4 +1,7 @@
-import { getData, getSearch } from "./mockedJson.js";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleSubmit = exports.prepareSubmit = exports.clearHistory = exports.processCommand = void 0;
+const mockedJson_js_1 = require("../mockedJson.js");
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
     prepareSubmit();
@@ -20,6 +23,7 @@ function prepareSubmit() {
         maybeForm.addEventListener("submit", handleSubmit);
     }
 }
+exports.prepareSubmit = prepareSubmit;
 let contents = new Array(); // contents of the current CSV file
 let file_name = ""; // current file name
 /**
@@ -59,17 +63,18 @@ function handleSubmit(event) {
         }
     }
 }
+exports.handleSubmit = handleSubmit;
 /**
  * Takes in a command from the command text box and handles appropriate
  * messages or behaviors depending on the command's contents. If an invalid
  * command is inputted into the text box, output a message that says "Invalid command"
  */
 let current_mode = "brief"; // default starts in brief mode
-export function processCommand(command) {
+function processCommand(command) {
     // when a command is passed in
     let output = document.createElement("div");
     if (command == "mode") {
-        // handle mode cange
+        // handle mode change
         return processMode();
     }
     if (current_mode == "verbose") {
@@ -109,31 +114,6 @@ export function processCommand(command) {
             if (cArguments[0] == "search") {
                 // if the command is search
                 return processSearch(output, cArguments);
-                // if (contents.length == 0) {
-                //   // if the csv file is empty
-                //   if (current_mode == "verbose") {
-                //     results.innerText += "Output: Invalid command";
-                //   } else {
-                //     results.innerText += "Invalid command";
-                //   }
-                //   output.appendChild(results);
-                //   return output; // return an "invalid command" output
-                // }
-                // let query = processSearch(cArguments[1], cArguments[2]);
-                // if (query == null) {
-                //   if (current_mode == "verbose") {
-                //     results.innerText += "Output: Invalid query";
-                //   } else {
-                //     results.innerText += "Invalid query";
-                //   }
-                // } else {
-                //   if (current_mode == "verbose") {
-                //     let tag = document.createElement("div");
-                //     tag.innerText = "Output:";
-                //     output.appendChild(tag);
-                //   }
-                //   results.append(query);
-                // }
             }
             else {
                 if (current_mode == "verbose") {
@@ -148,6 +128,7 @@ export function processCommand(command) {
         return output;
     }
 }
+exports.processCommand = processCommand;
 /**
  * Changes mode to opposite of current setting (brief -> verbose, verbose -> brief)
  * @returns div element containing output message
@@ -158,8 +139,7 @@ function processMode() {
     if (current_mode == "brief") {
         // if current mode is brief
         current_mode = "verbose"; // change mode into verbose
-        output.innerText =
-            "Command: mode\nOutput: Changed to verbose mode" + "\n";
+        output.innerText = "Command: mode\nOutput: Changed to verbose mode" + "\n";
     }
     else {
         // if current mode is verbose
@@ -232,7 +212,7 @@ function processSearch(output, cArguments) {
  */
 function processLoadData(filepath) {
     // function to load the file
-    const data = getData(filepath);
+    const data = (0, mockedJson_js_1.getData)(filepath);
     if (data == null) {
         // if the file does not exist
         return `File ${filepath} does not exist`;
@@ -284,7 +264,7 @@ function viewCSVData(contents) {
  */
 function processQuery(column, value) {
     // function for search command
-    const data = getSearch(file_name, column, value);
+    const data = (0, mockedJson_js_1.getSearch)(file_name, column, value);
     if (data == null) {
         return null;
     }
@@ -295,7 +275,7 @@ function processQuery(column, value) {
 /**
  * Clears window in user file (used for testing)
  */
-export function clearHistory() {
+function clearHistory() {
     const maybeDisplays = document.getElementsByClassName("scroll"); // command history box display
     const maybeDisplay = maybeDisplays.item(0);
     if (maybeDisplay == null) {
@@ -305,7 +285,7 @@ export function clearHistory() {
         console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
     }
     else {
-        maybeDisplay.innerHTML = '';
+        maybeDisplay.innerHTML = "";
     }
 }
-export { prepareSubmit, handleSubmit };
+exports.clearHistory = clearHistory;

@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getSearch = exports.getData = void 0;
 let mockedParseData = new Map();
 let mockedQueryData = new Map();
 const file1 = [
@@ -86,7 +89,7 @@ mockedQueryData.set("equalColumnRowFile 1 a", [["e", "a", "g", "h"]]);
 mockedQueryData.set("equalColumnRowFile 2 a", [[]]);
 mockedQueryData.set("manyRowsLowColumnsFile b p", [["e", "p"], ["o", "p"], ["n", "p"]]);
 mockedQueryData.set("manyColumnsLowRowsFile file for", [[]]);
-export function getData(filepath) {
+function getData(filepath) {
     if (mockedParseData.has(filepath)) {
         return mockedParseData.get(filepath);
     }
@@ -94,7 +97,8 @@ export function getData(filepath) {
         return null;
     }
 }
-export function getSearch(filename, column, value) {
+exports.getData = getData;
+function getSearch(filename, column, value) {
     if (mockedQueryData.has(filename + " " + column + " " + value)) {
         return mockedQueryData.get(filename + " " + column + " " + value);
     }
@@ -102,3 +106,4 @@ export function getSearch(filename, column, value) {
         return null;
     }
 }
+exports.getSearch = getSearch;
