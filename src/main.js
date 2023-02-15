@@ -22,8 +22,8 @@ function prepareSubmit() {
         maybeForm.addEventListener("submit", handleSubmit);
     }
 }
-let history = '';
 let contents = new Array;
+let file_name = '';
 //contents = [["hi", "hey", "hello"], ["bye", "see ya", "later"]]
 function handleSubmit(event) {
     const maybeDisplays = document.getElementsByClassName("scroll");
@@ -125,6 +125,7 @@ function processCommand(command) {
                     results.innerText += "File does not exist";
                 }
                 else {
+                    file_name = cArguments[1];
                     results.innerText += parsed;
                 }
             }
@@ -134,6 +135,16 @@ function processCommand(command) {
         }
         else {
             if (cArguments[0] == "search") {
+                if (contents.length == 0) {
+                    if (current_mode == "verbose") {
+                        results.innerText += "Output: Invalid command";
+                    }
+                    else {
+                        results.innerText += "Invalid command";
+                    }
+                    output.appendChild(results);
+                    return output;
+                }
                 let query = processSearch(cArguments[1], cArguments[2]);
                 if (query == null) {
                     if (current_mode == "verbose") {
@@ -205,12 +216,12 @@ function viewCSVData(contents) {
     return tbl;
 }
 function processSearch(column, value) {
-    const data = getSearch(contents, column, value);
+    const data = getSearch(file_name, column, value);
     if (data == null) {
         return null;
     }
     else {
-        console.log(data);
+        //console.log(data)
         //viewCSVData(data)
         //return true
         return viewCSVData(data);

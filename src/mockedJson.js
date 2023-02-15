@@ -24,8 +24,8 @@ const oneRowFile = [
 ];
 const equalColumnRowFile = [
     ["a", "b", "c", "d"],
-    ["e", "f", "g", "h"],
-    ["i", "j", "k", "l"],
+    ["e", "a", "g", "h"],
+    ["a", "j", "k", "l"],
     ["m", "n", "o", "p"],
 ];
 const manyColumnsLowRowsFile = [
@@ -62,7 +62,7 @@ const manyColumnsLowRowsFile = [
 ];
 const manyRowsLowColumnsFile = [
     ["a", "b"],
-    ["e", "f"],
+    ["e", "p"],
     ["i", "j"],
     ["i", "j"],
     ["c", "d"],
@@ -71,8 +71,8 @@ const manyRowsLowColumnsFile = [
     ["s", "c"],
     ["w", "t"],
     ["n", "p"],
-    ["z", "z"],
-    ["m", "n"],
+    ["z", "s"],
+    ["p", "n"],
 ];
 mockedParseData.set("file1", file1);
 mockedParseData.set("oneColumnFile", oneColumnFile);
@@ -80,7 +80,12 @@ mockedParseData.set("oneRowFile", oneRowFile);
 mockedParseData.set("equalColumnRowFile", equalColumnRowFile);
 mockedParseData.set("manyColumnsLowRowsFile", manyColumnsLowRowsFile);
 mockedParseData.set("manyRowsLowColumnsFile", manyRowsLowColumnsFile);
-mockedQueryData.set("2remains", file1);
+mockedQueryData.set("file1 2 remains", [["The", "song", "remains", "the", "same."]]);
+mockedQueryData.set("equalColumnRowFile 0 a", [["a", "b", "c", "d"], ["a", "j", "k", "l"]]);
+mockedQueryData.set("equalColumnRowFile 1 a", [["e", "a", "g", "h"]]);
+mockedQueryData.set("equalColumnRowFile 2 a", [[]]);
+mockedQueryData.set("manyRowsLowColumnsFile b p", [["e", "p"], ["o", "p"], ["n", "p"]]);
+mockedQueryData.set("manyColumnsLowRowsFile file for", [[]]);
 export function getData(filepath) {
     if (mockedParseData.has(filepath)) {
         return mockedParseData.get(filepath);
@@ -89,10 +94,9 @@ export function getData(filepath) {
         return null;
     }
 }
-export function getSearch(contents, column, value) {
-    console.log(contents);
-    if (mockedQueryData.has(column + value)) {
-        return mockedQueryData.get(column + value);
+export function getSearch(filename, column, value) {
+    if (mockedQueryData.has(filename + " " + column + " " + value)) {
+        return mockedQueryData.get(filename + " " + column + " " + value);
     }
     else {
         return null;

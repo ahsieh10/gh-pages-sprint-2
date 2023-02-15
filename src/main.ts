@@ -24,8 +24,8 @@ function prepareSubmit(){
     }
 }
 
-let history = '';
 let contents = new Array<Array<string>>;
+let file_name = '';
 //contents = [["hi", "hey", "hello"], ["bye", "see ya", "later"]]
 function handleSubmit(event: SubmitEvent) {
     const maybeDisplays: HTMLCollectionOf<Element> =
@@ -126,6 +126,7 @@ function processCommand(command: string) {
                 results.innerText += "File does not exist"
             }
             else{
+                file_name = cArguments[1]
                 results.innerText += parsed
             }
         }
@@ -135,6 +136,16 @@ function processCommand(command: string) {
     }
     else{
         if(cArguments[0] == "search"){
+            if(contents.length == 0){
+                if(current_mode == "verbose"){
+                    results.innerText += "Output: Invalid command"
+                }
+                else{
+                    results.innerText += "Invalid command"
+                }
+                output.appendChild(results)
+                return output
+            }
             let query = processSearch(cArguments[1], cArguments[2])
             if(query == null){
                 if(current_mode == "verbose"){
@@ -217,7 +228,7 @@ function viewCSVData(contents: Array<Array<string>>) {
 
 
 function processSearch(column: string, value: string){
-    const data: Array<Array<string>> | null = getSearch(contents, column, value)
+    const data: Array<Array<string>> | null = getSearch(file_name, column, value)
     if(data == null){
         return null
     }
