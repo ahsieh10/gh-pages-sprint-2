@@ -1,5 +1,5 @@
 import * as main from './main';
-import "@testing-library/dom"
+import "@testing-library/jest-dom"
 import{processCommand, clearHistory} from "./main"
 import {screen} from "@testing-library/dom"
 // Lets us send user events (like typing and clicking)
@@ -15,12 +15,14 @@ const startHTML =
         <!-- Prepare a region of the page to hold the command history -->
         <div class="repl-history">  
         <h1>Command History</h1>
+        <label for="scroll">Output Box</label>
         <div class="scroll">
         </div>          
         </div>
         <!-- Prepare a region of the page to hold the command input box -->
         <div class="repl-input">
             <form id = "commands">
+                <label for="repl-command-box">Command Input Box</label>
                 <input type="text" class="repl-command-box" placeholder="Enter command here">
                 <div class="button">
                     <button type="submit"> Submit command</button>
@@ -32,9 +34,9 @@ const startHTML =
     directly. Instead, the author of the site needs to compile the TypeScript to JavaScript. -->
 </section>`
 
-let tryButton: HTMLElement
+
 // Don't neglect to give the type for _every_ identifier.
-let input1: HTMLElement, input2: HTMLElement, input3: HTMLElement
+let tryButton: HTMLElement
 
 // Setup! This runs /before every test function/
 beforeEach(() => {
@@ -47,15 +49,25 @@ beforeEach(() => {
 
   // (3) Find the elements that should be present at the beginning
   // Using "getBy..." will throw an error if this element doesn't exist.
-  tryButton = screen.getByText("Try it!")
-  input1 = screen.getByLabelText("Guess 1")
-  input2 = screen.getByLabelText("Guess 2")
-  input3 = screen.getByLabelText("Guess 3")
+  tryButton = screen.getByText(" Submit Command")
 });
 
-test("toggling verbose", () => {
-    const input = ["", "", ""];
-    const output = pattern(input);
-    expect(output).toBe(false);
-  });
+test('toggling mode to verbose', () => {
+    
+    tryButton.addEventListener("click", () => main.handleSubmit);
+  
+    // Alternatively, we could check behavior of the update function itself directly:
+    // main.updateHistoryAndRender(falseMock)    
 
+    // We _could_ also simulate typing in the input fields via userEvent.type(...)
+    // But this test is meant to be independent of the exact guess.
+    userEvent.type(screen.getByLabelText('Command Input Box'), 'mode')
+    userEvent.click(tryButton)
+    // Now, did we get an incorrect-try block?
+    
+    // Could do this, but is the class name something a user (or screenreader) sees?
+    // const incorrectTries = document.getElementsByClassName("incorrect-try")    
+    // We should prefer this instead:
+    const incorrectTries = screen.getAllByText("Guess 1 was incorrect") 
+    expect(incorrectTries.length).toBe(1)
+  })

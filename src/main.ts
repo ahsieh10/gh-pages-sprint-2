@@ -72,18 +72,8 @@ export function processCommand(command: string) {
   let output = document.createElement("div");
 
   if (command == "mode") {
-    // if user switches the mode by command
-    if (current_mode == "brief") {
-      // if current mode is brief
-      current_mode = "verbose"; // change mode into verbose
-      output.innerText =
-        "Command: " + command + "\nOutput: Changed to verbose mode" + "\n";
-    } else {
-      // if current mode is verbose
-      current_mode = "brief"; // change mode into brief
-      output.innerText = "Changed to brief mode" + "\n";
-    }
-    return output;
+    // handle mode cange
+    return processMode()
   }
   if (current_mode == "verbose") {
     let inputCommand = document.createElement("div");
@@ -91,28 +81,9 @@ export function processCommand(command: string) {
     output.appendChild(inputCommand);
   }
   if (command == "view") {
-    if (contents.length == 0) {
-      // if there is no CSV file (note that an
-      // existing but empty CSV file would have a length of 1)
-      let errorMessage = document.createElement("div");
-      if (current_mode == "verbose") {
-        errorMessage.innerText += "Output: ";
-      }
-      errorMessage.innerText += "Invalid command";
-      output.appendChild(errorMessage);
-      return output;
-    }
-    let viewTable = viewCSVData(contents); // if there is a CSV file (i.e: load_file was called properly)
-    if (current_mode == "verbose") {
-      // if the current mode is verbose, add
-      // on this extra line
-      let tag = document.createElement("div");
-      tag.innerText = "Output:";
-      output.appendChild(tag);
-    }
-    output.appendChild(viewTable); // shows the table no matter the mode
-    return output;
-  } else {
+    return processView(output);
+  } 
+  else {
     const cArguments: Array<string> = command.split(" ", 3);
     let results = document.createElement("div");
     if (cArguments.length != 3) {
@@ -134,35 +105,13 @@ export function processCommand(command: string) {
         results.innerText += "Invalid command"; // if you had a command that
         // had 2 parameters and was not load_file
       }
-    } else {
+    } 
+    else {
       if (cArguments[0] == "search") {
         // if the command is search
-        if (contents.length == 0) {
-          // if the csv file is empty
-          if (current_mode == "verbose") {
-            results.innerText += "Output: Invalid command";
-          } else {
-            results.innerText += "Invalid command";
-          }
-          output.appendChild(results);
-          return output; // return an "invalid command" output
-        }
-        let query = processSearch(cArguments[1], cArguments[2]);
-        if (query == null) {
-          if (current_mode == "verbose") {
-            results.innerText += "Output: Invalid query";
-          } else {
-            results.innerText += "Invalid query";
-          }
-        } else {
-          if (current_mode == "verbose") {
-            let tag = document.createElement("div");
-            tag.innerText = "Output:";
-            output.appendChild(tag);
-          }
-          results.append(query);
-        }
-      } else {
+        return processSearch(output, cArguments)
+      } 
+      else {
         if (current_mode == "verbose") {
           results.innerText += "Output: Invalid command";
         } else {
@@ -173,6 +122,82 @@ export function processCommand(command: string) {
     output.appendChild(results);
     return output;
   }
+}
+
+/**
+ * Changes mode to opposite of current setting (brief -> verbose, verbose -> brief)
+ * @returns div element containing output message
+ */
+function processMode(){
+  let output = document.createElement("div");
+  // if user switches the mode by command
+  if (current_mode == "brief") {
+    // if current mode is brief
+    current_mode = "verbose"; // change mode into verbose
+    output.innerText =
+      "Command: mode\nOutput: Changed to verbose mode" + "\n";
+  } else {
+    // if current mode is verbose
+    current_mode = "brief"; // change mode into brief
+    output.innerText = "Changed to brief mode" + "\n";
+  }
+  return output;
+}
+
+function processView(output: HTMLDivElement){
+
+  if (contents.length == 0) {
+    // if there is no CSV file (note that an
+    // existing but empty CSV file would have a length of 1)
+    let errorMessage = document.createElement("div");
+    if (current_mode == "verbose") {
+      errorMessage.innerText += "Output: ";
+    }
+    errorMessage.innerText += "Invalid command";
+    output.appendChild(errorMessage);
+    return output;
+  }
+  let viewTable = viewCSVData(contents); // if there is a CSV file (i.e: load_file was called properly)
+  if (current_mode == "verbose") {
+    // if the current mode is verbose, add
+    // on this extra line
+    let tag = document.createElement("div");
+    tag.innerText = "Output:";
+    output.appendChild(tag);
+  }
+  output.appendChild(viewTable); // shows the table no matter the mode
+  return output;
+}
+
+function processSearch(output: HTMLElement, cArguments: Array<string>){
+  let results = document.createElement("div");
+  if (contents.length == 0) {
+    // if the csv file is empty
+    if (current_mode == "verbose") {
+      results.innerText += "Output: Invalid command";
+    } else {
+      results.innerText += "Invalid command";
+    }
+    output.appendChild(results);
+    return output; // return an "invalid command" output
+  }
+  let query = processQuery(cArguments[1], cArguments[2]);
+  if (query == null) {
+    if (current_mode == "verbose") {
+      results.innerText += "Output: Invalid query";
+    } else {
+      results.innerText += "Invalid query";
+    }
+  } else {
+    if (current_mode == "verbose") {
+      let tag = document.createElement("div");
+      tag.innerText = "Output:";
+      output.appendChild(tag);
+    }
+    results.append(query);
+  }
+  output.appendChild(results)
+  return output
 }
 
 /**
@@ -239,7 +264,7 @@ function viewCSVData(contents: Array<Array<string>>) {
  * @returns an HTML table element representing all rows that contain the value
  * within the specific column to search for
  */
-function processSearch(column: string, value: string) {
+function processQuery(column: string, value: string) {
   // function for search command
   const data: Array<Array<string>> | null = getSearch(file_name, column, value);
   if (data == null) {
