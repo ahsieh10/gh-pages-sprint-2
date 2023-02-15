@@ -60,13 +60,14 @@ function handleSubmit(event: SubmitEvent) {
   }
 }
 
+
 /**
  * Takes in a command from the command text box and handles appropriate
  * messages or behaviors depending on the command's contents. If an invalid
  * command is inputted into the text box, output a message that says "Invalid command"
  */
 let current_mode = "brief"; // default starts in brief mode
-function processCommand(command: string) {
+export function processCommand(command: string) {
   // when a command is passed in
   let output = document.createElement("div");
 
@@ -245,6 +246,22 @@ function processSearch(column: string, value: string) {
     return null;
   } else {
     return viewCSVData(data);
+  }
+}
+
+/**
+ * Clears window in user file (used for testing)
+ */
+export function clearHistory() {
+  const maybeDisplays: HTMLCollectionOf<Element> =
+    document.getElementsByClassName("scroll"); // command history box display
+  const maybeDisplay: Element | null = maybeDisplays.item(0);
+  if (maybeDisplay == null) {
+    console.log("Couldn't find input element");
+  } else if (!(maybeDisplay instanceof HTMLDivElement)) {
+    console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
+  } else {
+    maybeDisplay.innerHTML = ''
   }
 }
 

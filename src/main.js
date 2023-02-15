@@ -65,7 +65,7 @@ function handleSubmit(event) {
     }
 }
 let current_mode = "brief";
-function processCommand(command) {
+export function processCommand(command) {
     let output = document.createElement("div");
     if (command == "mode") { // if user switches the mode by command
         if (current_mode == "brief") {
