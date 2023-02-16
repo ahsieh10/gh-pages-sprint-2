@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSearch = exports.getData = void 0;
-let mockedParseData = new Map();
-let mockedQueryData = new Map();
-const file1 = [
+var mockedParseData = new Map();
+var mockedQueryData = new Map();
+var file1 = [
     ["1", "2", "3", "4", "5"],
     ["The", "song", "remains", "the", "same."]
 ];
-const oneColumnFile = [["1"], ["2"], ["3"], ["4"]];
-const oneRowFile = [
+var oneColumnFile = [["1"], ["2"], ["3"], ["4"]];
+var oneRowFile = [
     [
         "this",
         "is",
@@ -25,13 +22,13 @@ const oneRowFile = [
         "long",
     ],
 ];
-const equalColumnRowFile = [
+var equalColumnRowFile = [
     ["a", "b", "c", "d"],
     ["e", "a", "g", "h"],
     ["a", "j", "k", "l"],
     ["m", "n", "o", "p"],
 ];
-const manyColumnsLowRowsFile = [
+var manyColumnsLowRowsFile = [
     [
         "this",
         "is",
@@ -63,7 +60,7 @@ const manyColumnsLowRowsFile = [
         "functionality",
     ],
 ];
-const manyRowsLowColumnsFile = [
+var manyRowsLowColumnsFile = [
     ["a", "b"],
     ["e", "p"],
     ["i", "j"],
@@ -89,7 +86,7 @@ mockedQueryData.set("equalColumnRowFile 1 a", [["e", "a", "g", "h"]]);
 mockedQueryData.set("equalColumnRowFile 2 a", [[]]);
 mockedQueryData.set("manyRowsLowColumnsFile b p", [["e", "p"], ["o", "p"], ["n", "p"]]);
 mockedQueryData.set("manyColumnsLowRowsFile file for", [[]]);
-function getData(filepath) {
+export function getData(filepath) {
     if (mockedParseData.has(filepath)) {
         return mockedParseData.get(filepath);
     }
@@ -97,8 +94,7 @@ function getData(filepath) {
         return null;
     }
 }
-exports.getData = getData;
-function getSearch(filename, column, value) {
+export function getSearch(filename, column, value) {
     if (mockedQueryData.has(filename + " " + column + " " + value)) {
         return mockedQueryData.get(filename + " " + column + " " + value);
     }
@@ -106,4 +102,3 @@ function getSearch(filename, column, value) {
         return null;
     }
 }
-exports.getSearch = getSearch;

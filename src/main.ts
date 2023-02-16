@@ -1,5 +1,7 @@
 import { getData, getSearch } from "../mockedJson.js";
 
+type ProcessFunction = (cArguments: string) => HTMLElement;
+
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = () => {
   prepareSubmit();
@@ -33,31 +35,8 @@ let file_name = ""; // current file name
  * the submit button being activated
  */
 function handleSubmit(event: SubmitEvent) {
-  const maybeDisplays: HTMLCollectionOf<Element> =
-    document.getElementsByClassName("scroll"); // command history box display
-  const maybeDisplay: Element | null = maybeDisplays.item(0);
   event.preventDefault();
-  if (maybeDisplay == null) {
-    console.log("Couldn't find input element");
-  } else if (!(maybeDisplay instanceof HTMLDivElement)) {
-    console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
-  } else {
-    const maybeInputs: HTMLCollectionOf<Element> =
-      document.getElementsByClassName("repl-command-box");
-    // take the input from the command text box
-    const maybeInput: Element | null = maybeInputs.item(0);
-    if (maybeInput == null) {
-      console.log("Couldn't find input element");
-    } else if (!(maybeInput instanceof HTMLInputElement)) {
-      console.log(`Found element ${maybeInput}, but it wasn't an input`);
-    } else {
-      const output: Element = processCommand(maybeInput.value);
-      // process the command depending on which one it is
-      maybeDisplay.appendChild(output);
-      // show the output of processCommand in the history box display
-      maybeInput.value = ""; // reset the command text box
-    }
-  }
+  renderHistory(processCommand);
 }
 
 /**
@@ -269,9 +248,10 @@ function processQuery(column: string, value: string) {
 }
 
 /**
- * Clears window in user file (used for testing)
+ * Function used to render output onto html screen.
+ * @param processFunction Function that takes in string and outputs an html element
  */
-export function clearHistory() {
+export function renderHistory(processFunction: ProcessFunction){
   const maybeDisplays: HTMLCollectionOf<Element> =
     document.getElementsByClassName("scroll"); // command history box display
   const maybeDisplay: Element | null = maybeDisplays.item(0);
@@ -280,8 +260,32 @@ export function clearHistory() {
   } else if (!(maybeDisplay instanceof HTMLDivElement)) {
     console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
   } else {
-    maybeDisplay.innerHTML = "";
+    const maybeInputs: HTMLCollectionOf<Element> =
+      document.getElementsByClassName("repl-command-box");
+    // take the input from the command text box
+    const maybeInput: Element | null = maybeInputs.item(0);
+    if (maybeInput == null) {
+      console.log("Couldn't find input element");
+    } else if (!(maybeInput instanceof HTMLInputElement)) {
+      console.log(`Found element ${maybeInput}, but it wasn't an input`);
+    } else {
+
+      const output: Element = processFunction(maybeInput.value);
+      // process the command depending on which one it is
+      maybeDisplay.appendChild(output);
+      // show the output of processCommand in the history box display
+      maybeInput.value = ""; // reset the command text box
+    }
   }
+}
+
+/**
+ * Clears data in user file (used for testing)
+ */
+export function clearHistory() {
+  contents = new Array<Array<string>>(); // contents of the current CSV file
+  file_name = "";
+  current_mode = "brief"
 }
 
 export { prepareSubmit, handleSubmit };

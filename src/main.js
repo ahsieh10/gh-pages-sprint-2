@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleSubmit = exports.prepareSubmit = exports.clearHistory = exports.processCommand = void 0;
-const mockedJson_js_1 = require("../mockedJson.js");
+import { getData, getSearch } from "../mockedJson.js";
 // The window.onload callback is invoked when the window is first loaded by the browser
-window.onload = () => {
+window.onload = function () {
     prepareSubmit();
 };
 /**
@@ -12,20 +9,19 @@ window.onload = () => {
  */
 function prepareSubmit() {
     // Assumption: there's only one thing
-    const maybeForm = document.getElementById("commands");
+    var maybeForm = document.getElementById("commands");
     if (maybeForm == null) {
         console.log("Couldn't find input element");
     }
     else if (!(maybeForm instanceof HTMLFormElement)) {
-        console.log(`Found element ${maybeForm}, but it wasn't an input`);
+        console.log("Found element ".concat(maybeForm, ", but it wasn't an input"));
     }
     else {
         maybeForm.addEventListener("submit", handleSubmit);
     }
 }
-exports.prepareSubmit = prepareSubmit;
-let contents = new Array(); // contents of the current CSV file
-let file_name = ""; // current file name
+var contents = new Array(); // contents of the current CSV file
+var file_name = ""; // current file name
 /**
  * When the submit button is activated (through pressing enter or clicking
  * on the webpage's 'Submit button' feature), takes in the input from the
@@ -35,50 +31,24 @@ let file_name = ""; // current file name
  * the submit button being activated
  */
 function handleSubmit(event) {
-    const maybeDisplays = document.getElementsByClassName("scroll"); // command history box display
-    const maybeDisplay = maybeDisplays.item(0);
     event.preventDefault();
-    if (maybeDisplay == null) {
-        console.log("Couldn't find input element");
-    }
-    else if (!(maybeDisplay instanceof HTMLDivElement)) {
-        console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
-    }
-    else {
-        const maybeInputs = document.getElementsByClassName("repl-command-box");
-        // take the input from the command text box
-        const maybeInput = maybeInputs.item(0);
-        if (maybeInput == null) {
-            console.log("Couldn't find input element");
-        }
-        else if (!(maybeInput instanceof HTMLInputElement)) {
-            console.log(`Found element ${maybeInput}, but it wasn't an input`);
-        }
-        else {
-            const output = processCommand(maybeInput.value);
-            // process the command depending on which one it is
-            maybeDisplay.appendChild(output);
-            // show the output of processCommand in the history box display
-            maybeInput.value = ""; // reset the command text box
-        }
-    }
+    renderHistory(processCommand);
 }
-exports.handleSubmit = handleSubmit;
 /**
  * Takes in a command from the command text box and handles appropriate
  * messages or behaviors depending on the command's contents. If an invalid
  * command is inputted into the text box, output a message that says "Invalid command"
  */
-let current_mode = "brief"; // default starts in brief mode
-function processCommand(command) {
+var current_mode = "brief"; // default starts in brief mode
+export function processCommand(command) {
     // when a command is passed in
-    let output = document.createElement("div");
+    var output = document.createElement("div");
     if (command == "mode") {
         // handle mode change
         return processMode();
     }
     if (current_mode == "verbose") {
-        let inputCommand = document.createElement("div");
+        var inputCommand = document.createElement("div");
         inputCommand.innerText = "Command: " + command;
         output.appendChild(inputCommand);
     }
@@ -86,8 +56,8 @@ function processCommand(command) {
         return processView(output);
     }
     else {
-        const cArguments = command.split(" ", 3);
-        let results = document.createElement("div");
+        var cArguments = command.split(" ", 3);
+        var results = document.createElement("div");
         if (cArguments.length != 3) {
             // if the command is load_file
             // since load_file has 2 parameters in the textbox while search has 3
@@ -95,7 +65,7 @@ function processCommand(command) {
                 results.innerText += "Output: ";
             }
             if (cArguments.length == 2 && cArguments[0] == "load_file") {
-                let parsed = processLoadData(cArguments[1]);
+                var parsed = processLoadData(cArguments[1]);
                 if (parsed == null) {
                     // if it was not parsed correctly/at all
                     results.innerText += "File does not exist";
@@ -128,13 +98,12 @@ function processCommand(command) {
         return output;
     }
 }
-exports.processCommand = processCommand;
 /**
  * Changes mode to opposite of current setting (brief -> verbose, verbose -> brief)
  * @returns div element containing output message
  */
 function processMode() {
-    let output = document.createElement("div");
+    var output = document.createElement("div");
     // if user switches the mode by command
     if (current_mode == "brief") {
         // if current mode is brief
@@ -152,7 +121,7 @@ function processView(output) {
     if (contents.length == 0) {
         // if there is no CSV file (note that an
         // existing but empty CSV file would have a length of 1)
-        let errorMessage = document.createElement("div");
+        var errorMessage = document.createElement("div");
         if (current_mode == "verbose") {
             errorMessage.innerText += "Output: ";
         }
@@ -160,11 +129,11 @@ function processView(output) {
         output.appendChild(errorMessage);
         return output;
     }
-    let viewTable = viewCSVData(contents); // if there is a CSV file (i.e: load_file was called properly)
+    var viewTable = viewCSVData(contents); // if there is a CSV file (i.e: load_file was called properly)
     if (current_mode == "verbose") {
         // if the current mode is verbose, add
         // on this extra line
-        let tag = document.createElement("div");
+        var tag = document.createElement("div");
         tag.innerText = "Output:";
         output.appendChild(tag);
     }
@@ -172,7 +141,7 @@ function processView(output) {
     return output;
 }
 function processSearch(output, cArguments) {
-    let results = document.createElement("div");
+    var results = document.createElement("div");
     if (contents.length == 0) {
         // if the csv file is empty
         if (current_mode == "verbose") {
@@ -184,7 +153,7 @@ function processSearch(output, cArguments) {
         output.appendChild(results);
         return output; // return an "invalid command" output
     }
-    let query = processQuery(cArguments[1], cArguments[2]);
+    var query = processQuery(cArguments[1], cArguments[2]);
     if (query == null) {
         if (current_mode == "verbose") {
             results.innerText += "Output: Invalid query";
@@ -195,7 +164,7 @@ function processSearch(output, cArguments) {
     }
     else {
         if (current_mode == "verbose") {
-            let tag = document.createElement("div");
+            var tag = document.createElement("div");
             tag.innerText = "Output:";
             output.appendChild(tag);
         }
@@ -212,16 +181,16 @@ function processSearch(output, cArguments) {
  */
 function processLoadData(filepath) {
     // function to load the file
-    const data = (0, mockedJson_js_1.getData)(filepath);
+    var data = getData(filepath);
     if (data == null) {
         // if the file does not exist
-        return `File ${filepath} does not exist`;
+        return "File ".concat(filepath, " does not exist");
     }
     else {
         // if the filepath can be successfully found
         contents = data;
         console.log(data);
-        return `File ${filepath} loaded!`;
+        return "File ".concat(filepath, " loaded!");
     }
 }
 /**
@@ -233,17 +202,17 @@ function processLoadData(filepath) {
  */
 function viewCSVData(contents) {
     // function to view the file
-    const tbl = document.createElement("table");
-    const tblBody = document.createElement("tbody");
+    var tbl = document.createElement("table");
+    var tblBody = document.createElement("tbody");
     // creating all cells
-    for (let i = 0; i < contents.length; i++) {
+    for (var i = 0; i < contents.length; i++) {
         // for every row in the CSV
         // creates a table row
-        const row = document.createElement("tr");
-        for (let j = 0; j < contents[i].length; j++) {
+        var row = document.createElement("tr");
+        for (var j = 0; j < contents[i].length; j++) {
             // for every value in the row
-            const cell = document.createElement("td");
-            const cellText = document.createTextNode(contents[i][j]);
+            var cell = document.createElement("td");
+            var cellText = document.createTextNode(contents[i][j]);
             cell.appendChild(cellText); // add the text into the cell
             row.appendChild(cell); // append the cell into the row
         }
@@ -264,7 +233,7 @@ function viewCSVData(contents) {
  */
 function processQuery(column, value) {
     // function for search command
-    const data = (0, mockedJson_js_1.getSearch)(file_name, column, value);
+    var data = getSearch(file_name, column, value);
     if (data == null) {
         return null;
     }
@@ -273,19 +242,51 @@ function processQuery(column, value) {
     }
 }
 /**
- * Clears window in user file (used for testing)
+ * Function used to render output onto html screen.
+ * @param processFunction Function that takes in string and outputs an html element
  */
-function clearHistory() {
-    const maybeDisplays = document.getElementsByClassName("scroll"); // command history box display
-    const maybeDisplay = maybeDisplays.item(0);
+export function renderHistory(processFunction) {
+    var maybeDisplays = document.getElementsByClassName("scroll"); // command history box display
+    var maybeDisplay = maybeDisplays.item(0);
     if (maybeDisplay == null) {
         console.log("Couldn't find input element");
     }
     else if (!(maybeDisplay instanceof HTMLDivElement)) {
-        console.log(`Found element ${maybeDisplay}, but it wasn't a div`);
+        console.log("Found element ".concat(maybeDisplay, ", but it wasn't a div"));
+    }
+    else {
+        var maybeInputs = document.getElementsByClassName("repl-command-box");
+        // take the input from the command text box
+        var maybeInput = maybeInputs.item(0);
+        if (maybeInput == null) {
+            console.log("Couldn't find input element");
+        }
+        else if (!(maybeInput instanceof HTMLInputElement)) {
+            console.log("Found element ".concat(maybeInput, ", but it wasn't an input"));
+        }
+        else {
+            var output = processFunction(maybeInput.value);
+            // process the command depending on which one it is
+            maybeDisplay.appendChild(output);
+            // show the output of processCommand in the history box display
+            maybeInput.value = ""; // reset the command text box
+        }
+    }
+}
+/**
+ * Clears window in user file (used for testing)
+ */
+export function clearHistory() {
+    var maybeDisplays = document.getElementsByClassName("scroll"); // command history box display
+    var maybeDisplay = maybeDisplays.item(0);
+    if (maybeDisplay == null) {
+        console.log("Couldn't find input element");
+    }
+    else if (!(maybeDisplay instanceof HTMLDivElement)) {
+        console.log("Found element ".concat(maybeDisplay, ", but it wasn't a div"));
     }
     else {
         maybeDisplay.innerHTML = "";
     }
 }
-exports.clearHistory = clearHistory;
+export { prepareSubmit, handleSubmit };
