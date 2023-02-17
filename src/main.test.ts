@@ -250,6 +250,7 @@ test("check processSearch", () => {
 });
 
 test("check processCommand", () => {
+    
   // checks for processMode
   expect(main.processCommand("mode").innerText).toBe(
     "Command: mode\nOutput: Changed to verbose mode" + "\n"

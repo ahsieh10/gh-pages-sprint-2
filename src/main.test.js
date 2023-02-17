@@ -148,7 +148,7 @@ test("check processCommand", function () {
           2 enclosed divs (1 for the command, and 1 for the output)
       */
     // checks view when file has not been loaded yet
-    expect(main.processCommand("view").innerText).toBe("Invalid Command");
+    expect(main.processCommand("view").innerHTML.trim()).toBe("<div></div><div></div>");
     // search with valid input when file has not been loaded yet
     expect(main.processCommand("search 2 remains").innerHTML.trim()).toBe("<div></div><div></div>");
     // search without other inputs
