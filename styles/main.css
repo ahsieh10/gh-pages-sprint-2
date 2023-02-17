@@ -8,7 +8,7 @@ div.scroll {
     background-color: rgb(238, 238, 238);
     border: 1.5px solid Black;
     width: 600px;
-    height: 150px;
+    height: 300px;
     overflow-x: auto;
     overflow-y: auto;
     text-align:left;

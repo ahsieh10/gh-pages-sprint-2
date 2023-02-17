@@ -1,4 +1,4 @@
-import { getData, getSearch } from "../mockedJson.js";
+import { mockedParseData, mockedQueryData } from "../mockedJson.js";
 // The window.onload callback is invoked when the window is first loaded by the browser
 window.onload = function () {
     prepareSubmit();
@@ -102,22 +102,57 @@ export function processCommand(command) {
  * Changes mode to opposite of current setting (brief -> verbose, verbose -> brief)
  * @returns div element containing output message
  */
-function processMode() {
+export function processMode() {
     var output = document.createElement("div");
     // if user switches the mode by command
     if (current_mode == "brief") {
         // if current mode is brief
-        current_mode = "verbose"; // change mode into verbose
         output.innerText = "Command: mode\nOutput: Changed to verbose mode" + "\n";
+        current_mode = "verbose"; // change mode into verbose
     }
     else {
         // if current mode is verbose
-        current_mode = "brief"; // change mode into brief
         output.innerText = "Changed to brief mode" + "\n";
+        current_mode = "brief"; // change mode into brief
     }
     return output;
 }
-function processView(output) {
+/**
+ * Takes in a filepath and returns the 2D array that the path is mapped to
+ * @param filepath a string representing the file name
+ * @returns a 2D array representing contents of the CSV file
+ */
+export function getData(filepath) {
+    if (mockedParseData.has(filepath)) {
+        return mockedParseData.get(filepath);
+    }
+    else {
+        return null;
+    }
+}
+/**
+ * Stores the CSV file's name into the program if a valid name is given,
+ * else return a message "File <file-name> does not exist"
+ * @param filepath a string representing the file name
+ * @returns a message on the command history text box display
+ */
+export function processLoadData(filepath) {
+    // function to load the file
+    var data = getData(filepath);
+    if (data == null) {
+        // if the file does not exist
+        return "File ".concat(filepath, " does not exist");
+    }
+    else {
+        // if the filepath can be successfully found
+        file_name = filepath;
+        contents = data;
+        console.log(data);
+        return "File ".concat(filepath, " loaded!");
+    }
+}
+// helper function for processCommand that connects load_file results with viewCSVData
+export function processView(output) {
     if (contents.length == 0) {
         // if there is no CSV file (note that an
         // existing but empty CSV file would have a length of 1)
@@ -140,7 +175,8 @@ function processView(output) {
     output.appendChild(viewTable); // shows the table no matter the mode
     return output;
 }
-function processSearch(output, cArguments) {
+// helper function for processCommand that connects it with processQuery
+export function processSearch(output, cArguments) {
     var results = document.createElement("div");
     if (contents.length == 0) {
         // if the csv file is empty
@@ -168,30 +204,10 @@ function processSearch(output, cArguments) {
             tag.innerText = "Output:";
             output.appendChild(tag);
         }
-        results.append(query);
+        results.appendChild(query);
     }
     output.appendChild(results);
     return output;
-}
-/**
- * Stores the CSV file's name into the program if a valid name is given,
- * else return a message "File <file-name> does not exist"
- * @param filepath a string representing the file name
- * @returns a message on the command history text box display
- */
-function processLoadData(filepath) {
-    // function to load the file
-    var data = getData(filepath);
-    if (data == null) {
-        // if the file does not exist
-        return "File ".concat(filepath, " does not exist");
-    }
-    else {
-        // if the filepath can be successfully found
-        contents = data;
-        console.log(data);
-        return "File ".concat(filepath, " loaded!");
-    }
 }
 /**
  * Processes the contents of a CSV file and turns the data from raw strings into
@@ -200,7 +216,7 @@ function processLoadData(filepath) {
  * CSV file
  * @returns a table in HTML Element type that represents the CSV file contents
  */
-function viewCSVData(contents) {
+export function viewCSVData(contents) {
     // function to view the file
     var tbl = document.createElement("table");
     var tblBody = document.createElement("tbody");
@@ -221,6 +237,15 @@ function viewCSVData(contents) {
     tbl.appendChild(tblBody); // append the table body into the table
     return tbl; // returns an HTML table representing the CSV dataset
 }
+// getter for search that represents the output of backend searching method
+export function getSearch(filename, column, value) {
+    if (mockedQueryData.has(filename + " " + column + " " + value)) {
+        return mockedQueryData.get(filename + " " + column + " " + value);
+    }
+    else {
+        return null;
+    }
+}
 /**
  * Takes in a column to search in and a value to search for within the contents
  * of a CSV file in order to output rows that contain the desired value in the
@@ -231,7 +256,7 @@ function viewCSVData(contents) {
  * @returns an HTML table element representing all rows that contain the value
  * within the specific column to search for
  */
-function processQuery(column, value) {
+export function processQuery(column, value) {
     // function for search command
     var data = getSearch(file_name, column, value);
     if (data == null) {
@@ -274,19 +299,11 @@ export function renderHistory(processFunction) {
     }
 }
 /**
- * Clears window in user file (used for testing)
+ * Clears data in user file (used for testing)
  */
 export function clearHistory() {
-    var maybeDisplays = document.getElementsByClassName("scroll"); // command history box display
-    var maybeDisplay = maybeDisplays.item(0);
-    if (maybeDisplay == null) {
-        console.log("Couldn't find input element");
-    }
-    else if (!(maybeDisplay instanceof HTMLDivElement)) {
-        console.log("Found element ".concat(maybeDisplay, ", but it wasn't a div"));
-    }
-    else {
-        maybeDisplay.innerHTML = "";
-    }
+    contents = new Array(); // contents of the current CSV file
+    file_name = "";
+    current_mode = "brief";
 }
 export { prepareSubmit, handleSubmit };

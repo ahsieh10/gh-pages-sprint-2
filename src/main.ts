@@ -1,4 +1,4 @@
-import { getData, getSearch } from "../mockedJson.js";
+import { mockedParseData, mockedQueryData } from "../mockedJson.js";
 
 type ProcessFunction = (cArguments: string) => HTMLElement;
 
@@ -103,22 +103,58 @@ export function processCommand(command: string) {
  * Changes mode to opposite of current setting (brief -> verbose, verbose -> brief)
  * @returns div element containing output message
  */
-function processMode() {
+export function processMode() {
   let output = document.createElement("div");
   // if user switches the mode by command
   if (current_mode == "brief") {
     // if current mode is brief
-    current_mode = "verbose"; // change mode into verbose
     output.innerText = "Command: mode\nOutput: Changed to verbose mode" + "\n";
+    current_mode = "verbose"; // change mode into verbose
   } else {
     // if current mode is verbose
-    current_mode = "brief"; // change mode into brief
     output.innerText = "Changed to brief mode" + "\n";
+    current_mode = "brief"; // change mode into brief
   }
   return output;
 }
 
-function processView(output: HTMLDivElement) {
+/**
+ * Takes in a filepath and returns the 2D array that the path is mapped to
+ * @param filepath a string representing the file name
+ * @returns a 2D array representing contents of the CSV file
+ */
+export function getData(filepath: string) {
+  if (mockedParseData.has(filepath)) {
+    return mockedParseData.get(filepath)!;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * Stores the CSV file's name into the program if a valid name is given,
+ * else return a message "File <file-name> does not exist"
+ * @param filepath a string representing the file name
+ * @returns a message on the command history text box display
+ */
+export function processLoadData(filepath: string) {
+  // function to load the file
+
+  const data: Array<Array<string>> | null = getData(filepath);
+  if (data == null) {
+    // if the file does not exist
+    return `File ${filepath} does not exist`;
+  } else {
+    // if the filepath can be successfully found
+    file_name = filepath;
+    contents = data;
+    console.log(data);
+    return `File ${filepath} loaded!`;
+  }
+}
+
+// helper function for processCommand that connects load_file results with viewCSVData
+export function processView(output: HTMLDivElement) {
   if (contents.length == 0) {
     // if there is no CSV file (note that an
     // existing but empty CSV file would have a length of 1)
@@ -142,7 +178,8 @@ function processView(output: HTMLDivElement) {
   return output;
 }
 
-function processSearch(output: HTMLElement, cArguments: Array<string>) {
+// helper function for processCommand that connects it with processQuery
+export function processSearch(output: HTMLDivElement, cArguments: Array<string>) {
   let results = document.createElement("div");
   if (contents.length == 0) {
     // if the csv file is empty
@@ -167,31 +204,10 @@ function processSearch(output: HTMLElement, cArguments: Array<string>) {
       tag.innerText = "Output:";
       output.appendChild(tag);
     }
-    results.append(query);
+    results.appendChild(query);
   }
   output.appendChild(results);
   return output;
-}
-
-/**
- * Stores the CSV file's name into the program if a valid name is given,
- * else return a message "File <file-name> does not exist"
- * @param filepath a string representing the file name
- * @returns a message on the command history text box display
- */
-function processLoadData(filepath: string) {
-  // function to load the file
-
-  const data: Array<Array<string>> | null = getData(filepath);
-  if (data == null) {
-    // if the file does not exist
-    return `File ${filepath} does not exist`;
-  } else {
-    // if the filepath can be successfully found
-    contents = data;
-    console.log(data);
-    return `File ${filepath} loaded!`;
-  }
 }
 
 /**
@@ -201,7 +217,7 @@ function processLoadData(filepath: string) {
  * CSV file
  * @returns a table in HTML Element type that represents the CSV file contents
  */
-function viewCSVData(contents: Array<Array<string>>) {
+export function viewCSVData(contents: Array<Array<string>>) {
   // function to view the file
   const tbl = document.createElement("table");
   const tblBody = document.createElement("tbody");
@@ -227,6 +243,15 @@ function viewCSVData(contents: Array<Array<string>>) {
   return tbl; // returns an HTML table representing the CSV dataset
 }
 
+// getter for search that represents the output of backend searching method
+export function getSearch(filename: string, column: string, value: string) {
+  if (mockedQueryData.has(filename + " " + column + " " + value)) {
+    return mockedQueryData.get(filename + " " + column + " " + value)!;
+  } else {
+    return null;
+  }
+}
+
 /**
  * Takes in a column to search in and a value to search for within the contents
  * of a CSV file in order to output rows that contain the desired value in the
@@ -237,7 +262,7 @@ function viewCSVData(contents: Array<Array<string>>) {
  * @returns an HTML table element representing all rows that contain the value
  * within the specific column to search for
  */
-function processQuery(column: string, value: string) {
+export function processQuery(column: string, value: string) {
   // function for search command
   const data: Array<Array<string>> | null = getSearch(file_name, column, value);
   if (data == null) {

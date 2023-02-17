@@ -1,5 +1,5 @@
-let mockedParseData = new Map<string, Array<Array<string>>>();
-let mockedQueryData = new Map<string, Array<Array<string>>>();
+export let mockedParseData = new Map<string, Array<Array<string>>>();
+export let mockedQueryData = new Map<string, Array<Array<string>>>();
 
 const file1 = [
 ["1", "2", "3", "4", "5"],
@@ -81,12 +81,15 @@ const manyRowsLowColumnsFile = [
 ["p", "n"],
 ];
 
+const emptyFile = [[]];
+
 mockedParseData.set("file1", file1);
 mockedParseData.set("oneColumnFile", oneColumnFile);
 mockedParseData.set("oneRowFile", oneRowFile);
 mockedParseData.set("equalColumnRowFile", equalColumnRowFile);
 mockedParseData.set("manyColumnsLowRowsFile", manyColumnsLowRowsFile);
 mockedParseData.set("manyRowsLowColumnsFile", manyRowsLowColumnsFile);
+mockedParseData.set("emptyFile", emptyFile);
 
 mockedQueryData.set("file1 2 remains", [["The", "song", "remains", "the", "same."]])
 mockedQueryData.set("equalColumnRowFile 0 a", [["a", "b", "c", "d"], ["a", "j", "k", "l"]])
@@ -94,19 +97,3 @@ mockedQueryData.set("equalColumnRowFile 1 a", [["e", "a", "g", "h"]])
 mockedQueryData.set("equalColumnRowFile 2 a", [[]])
 mockedQueryData.set("manyRowsLowColumnsFile b p", [["e", "p"], ["o", "p"],["n", "p"]])
 mockedQueryData.set("manyColumnsLowRowsFile file for", [[]])
-
-export function getData(filepath: string) {
-    if (mockedParseData.has(filepath)) {
-        return mockedParseData.get(filepath)!;
-    } else {
-        return null;
-    }
-}
-
-export function getSearch(filename: string, column: string, value: string) {
-    if (mockedQueryData.has(filename + " " + column + " " + value)) {
-        return mockedQueryData.get(filename + " " + column + " " + value)!;
-    } else {
-        return null;
-    }
-}
