@@ -148,7 +148,6 @@ export function processLoadData(filepath: string) {
     // if the filepath can be successfully found
     file_name = filepath;
     contents = data;
-    console.log(data);
     return `File ${filepath} loaded!`;
   }
 }
@@ -209,6 +208,7 @@ export function processSearch(output: HTMLDivElement, cArguments: Array<string>)
   output.appendChild(results);
   return output;
 }
+
 
 /**
  * Processes the contents of a CSV file and turns the data from raw strings into
@@ -294,8 +294,7 @@ export function renderHistory(processFunction: ProcessFunction){
     } else if (!(maybeInput instanceof HTMLInputElement)) {
       console.log(`Found element ${maybeInput}, but it wasn't an input`);
     } else {
-
-      const output: Element = processFunction(maybeInput.value);
+      const output: HTMLElement = processFunction(maybeInput.value);
       // process the command depending on which one it is
       maybeDisplay.appendChild(output);
       // show the output of processCommand in the history box display

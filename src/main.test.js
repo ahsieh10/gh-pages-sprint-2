@@ -3,7 +3,6 @@ import { mockedQueryData } from "../mockedJson.js";
 beforeEach(function () {
     main.clearHistory();
 });
-var startHTML = "<body>\n    <!-- Tell the browser what to show if JavaScript/TypeScript is disabled. -->\n    <noscript>This example requires JavaScript to run.</noscript>\n    <!-- Prepare a region of the page to hold the entire REPL interface -->\n    <div class=\"repl\">\n        <!-- Prepare a region of the page to hold the command history -->\n        <div class=\"repl-history\">  \n        <h1>Command History</h1>\n        <label for=\"scroll\">Output Box</label>\n        <div class=\"scroll\">\n        </div>          \n        </div>\n        <!-- Prepare a region of the page to hold the command input box -->\n        <div class=\"repl-input\">\n            <label for=\"commands\">Command Input Box</label>\n            <form id = \"commands\">\n                <input type=\"text\" class=\"repl-command-box\" placeholder=\"Enter command here\">\n                <div class=\"button\">\n                    <button type=\"submit\"> Submit command</button>\n                </div>\n            </form>\n        </div>\n    </div>\n    <!-- Load the script! Note: the .js extension is because browsers don't use TypeScript\n    directly. Instead, the author of the site needs to compile the TypeScript to JavaScript. -->\n    <script type=\"module\" src=\"../src/main.js\"></script>\n</body>";
 test("test", function () { true; });
 test("check processMode", function () {
     // this test also implicitly checks that the default mode is brief

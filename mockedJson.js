@@ -88,3 +88,4 @@ mockedQueryData.set("equalColumnRowFile 1 a", [["e", "a", "g", "h"]]);
 mockedQueryData.set("equalColumnRowFile 2 a", [[]]);
 mockedQueryData.set("manyRowsLowColumnsFile b p", [["e", "p"], ["o", "p"], ["n", "p"]]);
 mockedQueryData.set("manyColumnsLowRowsFile file for", [[]]);
+export { equalColumnRowFile };

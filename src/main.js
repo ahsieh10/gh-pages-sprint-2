@@ -147,7 +147,6 @@ export function processLoadData(filepath) {
         // if the filepath can be successfully found
         file_name = filepath;
         contents = data;
-        console.log(data);
         return "File ".concat(filepath, " loaded!");
     }
 }
